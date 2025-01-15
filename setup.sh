@@ -5,16 +5,17 @@
 # Create namespace
 kubectl create namespace $1
 
-# Install Helm
+current_dir=$(pwd)
 
 # Install Kong
 helm repo add kong https://charts.konghq.com
 helm repo update
-helm install kong kong/kong -f kong-values.yaml --namespace $1
+helm install kong kong/kong -f $current_dir/kong-values.yaml --namespace $1
 
 # Install Keycloak
 helm repo add bitnami https://charts.bitnami.com/bitnami
-helm install keycloak bitnami/keycloak -f keycloak-values.yaml --namespace $1
+helm repo update && cd keycloak
+helm install keycloak bitnami/keycloak -f $current_dir/values.yaml --namespace $1
 
 # Wait for Keycloak to be ready
 while [ $(kubectl get pods -l release=keycloak -o jsonpath='{.items[*].status.phase}' --namespace $1) != "Running" ]; do
