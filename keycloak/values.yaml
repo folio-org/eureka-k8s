@@ -98,7 +98,7 @@ ingress: # this is the ingress for the keycloak service, if enabled it should be
 livenessProbe:
   enabled: false
 logging:
-  level: DEBUG
+  level: INFO
   output: default
 networkPolicy:
   enabled: false
@@ -108,9 +108,9 @@ readinessProbe:
   enabled: false
 resources:
   limits:
-    memory: 3072Mi
+    memory: 2Gi
   requests:
-    memory: 2048Mi
+    memory: 1Gi
 service:
   http:
     enabled: true

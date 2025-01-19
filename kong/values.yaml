@@ -118,10 +118,10 @@ kong:
   resources:
     limits:
       ephemeral-storage: 1Gi
-      memory: 3072Mi
+      memory: 3Gi
     requests:
       ephemeral-storage: 50Mi
-      memory: 2428Mi
+      memory: 1Gi
   startupProbe:
     enabled: false
 migration:
@@ -138,10 +138,10 @@ postgresql:
     database: kong
     existingSecret: kong-credentials
     existingSecretPasswordKey: KONG_PG_PASSWORD
-    host: postgresql-snapshot
+    host: postgresql-snapshot # must be adjusted to the actual hostname of the PostgreSQL server
     password: ""
     port: 5432
-    user: kong
+    user: kong # must be adjusted to the actual username of the PostgreSQL server
 replicaCount: 1
 service:
   disableHttpPort: false
