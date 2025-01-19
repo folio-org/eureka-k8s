@@ -3,7 +3,7 @@ step-by-step guide for deploying Eureka base (keycloak, kong etc.) components<br
 Prerequisites:<br />
 1. Postgresql is availabe on cluster\namespace or network
 2. Kong\Keycloak DBs created
-3. Users in Kong\Keycloak DBs provisioned
+3. Users in Kong\Keycloak DBs provisioned<br />
 Steps to follow:<br />
 1. git clone https://github.com/folio-org/eureka-k8s.git
 2. cd eureka-k8s/ && chmod +x setup.sh
