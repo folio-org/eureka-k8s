@@ -10,25 +10,25 @@ KONG_CHART_VERSION=12.0.11
 KEYCLOAK_CHART_VERSION=21.0.4
 
 # List of values for Kong secret creation, please adjust accordingly to your needs
-KONG_ADMIN_USER=$(echo 'kong_admin' | base64)
-KONG_PASSWORD=$(echo 'kong_password_123!' | base64)
-KONG_PG_DATABASE=$(echo 'kong' | base64)
-KONG_PG_HOST=$(echo 'specify_postgresql_host' | base64)
-KONG_PG_PASSWORD=$(echo 'specify_postgresql_password' | base64)
-KONG_PG_PORT=$(echo '5432' | base64)
-KONG_PG_USER=$(echo 'specify_postgresql_user' | base64)
-KONG_URL=$(echo 'http://kong:8001' | base64)
+KONG_ADMIN_USER='kong_admin'
+KONG_PASSWORD='kong_password_123!'
+KONG_PG_DATABASE='kong'
+KONG_PG_HOST='specify_postgresql_host'
+KONG_PG_PASSWORD='specify_postgresql_password'
+KONG_PG_PORT='5432'
+KONG_PG_USER='specify_postgresql_user'
+KONG_URL='http://kong:8001'
 
 #List of values for Keycloak secret creation, please adjust accordingly to your needs
-KC_DB_PASSWORD=$(echo 'specify_keycloak_db_password' | base64)
-KC_DB_URL_DATABASE=$(echo 'keycloak' | base64)
-KC_DB_URL_HOST=$(echo 'specify_postgresql_host' | base64)
-KC_DB_URL_PORT=$(echo '5432' | base64)
-KC_DB_USERNAME=$(echo 'specify_postgresql_user' | base64)
-KC_FOLIO_BE_ADMIN_CLIENT_SECRET=$(echo 'folio_be_admin_client_secret' | base64)
-KC_HTTPS_KEY_STORE_PASSWORD=$(echo 'https_key_store_password' | base64)
-KEYCLOAK_ADMIN_PASSWORD=$(echo 'specify_keycloak_admin_password' | base64)
-KEYCLOAK_ADMIN_USER=$(echo 'keycloak_admin' | base64)
+KC_DB_PASSWORD='specify_keycloak_db_password'
+KC_DB_URL_DATABASE='keycloak'
+KC_DB_URL_HOST='specify_postgresql_host'
+KC_DB_URL_PORT='5432'
+KC_DB_USERNAME='specify_postgresql_user'
+KC_FOLIO_BE_ADMIN_CLIENT_SECRET='folio_be_admin_client_secret'
+KC_HTTPS_KEY_STORE_PASSWORD='https_key_store_password'
+KEYCLOAK_ADMIN_PASSWORD='specify_keycloak_admin_password'
+KEYCLOAK_ADMIN_USER='keycloak_admin'
 
 
 # Create namespace
@@ -80,8 +80,12 @@ do
   sleep 5
 done
 
+echo "Keycloak pod is ready in namespace $1"
+
 # Wait for Kong to be ready
 while [ "$(kubectl get pods -l release=kong-$1 -o jsonpath='{.items[*].status.phase}' --namespace $1)" != "Running" ]; 
 do
   sleep 5
 done
+
+echo "Kong pod is ready in namespace $1"
