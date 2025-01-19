@@ -1,0 +1,160 @@
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
+  enabled: true
+  privileged: false
+  readOnlyRootFilesystem: true
+  runAsGroup: 1001
+  runAsNonRoot: true
+  runAsUser: 1001
+  seLinuxOptions: {}
+  seccompProfile:
+    type: RuntimeDefault
+database: postgresql
+image:
+  pullPolicy: Always
+  registry: folioci
+  repository: folio-kong
+  tag: latest
+ingress:
+  annotations:
+    alb.ingress.kubernetes.io/group.name: folio-etesting.snapshot
+    alb.ingress.kubernetes.io/healthcheck-path: /version
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/success-codes: 200-399
+    kubernetes.io/ingress.class: alb
+  enabled: true
+  extraRules:
+  - host: ecs-folio-etesting-snapshot-kong.ci.folio.org
+    http:
+      paths:
+      - backend:
+          service:
+            name: kong-snapshot
+            port:
+              name: http-proxy
+        path: /*
+        pathType: ImplementationSpecific
+  hostname: folio-etesting-snapshot-kong.ci.folio.org
+  ingressClassName: ""
+  path: /*
+  pathType: ImplementationSpecific
+ingressController:
+  enabled: false
+kong:
+  extraEnvVars:
+  - name: KONG_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        key: KONG_PASSWORD
+        name: kong-credentials
+  - name: KONG_UPSTREAM_TIMEOUT
+    value: "600000"
+  - name: KONG_UPSTREAM_SEND_TIMEOUT
+    value: "600000"
+  - name: KONG_UPSTREAM_READ_TIMEOUT
+    value: "600000"
+  - name: KONG_NGINX_HTTP_CLIENT_MAX_BODY_SIZE
+    value: 256m
+  - name: KONG_NGINX_PROXY_PROXY_NEXT_UPSTREAM
+    value: error timeout http_500 http_502 http_503 http_504
+  - name: KONG_PROXY_SEND_TIMEOUT
+    value: "600000"
+  - name: KONG_UPSTREAM_CONNECT_TIMEOUT
+    value: "600000"
+  - name: KONG_PROXY_READ_TIMEOUT
+    value: "600000"
+  - name: KONG_NGINX_HTTP_KEEPALIVE_TIMEOUT
+    value: "600000"
+  - name: KONG_NGINX_UPSTREAM_KEEPALIVE
+    value: "600000"
+  - name: KONG_UPSTREAM_KEEPALIVE_IDLE_TIMEOUT
+    value: "600000"
+  - name: KONG_UPSTREAM_KEEPALIVE_POOL_SIZE
+    value: "1024"
+  - name: KONG_UPSTREAM_KEEPALIVE_MAX_REQUESTS
+    value: "20000"
+  - name: KONG_NGINX_HTTP_KEEPALIVE_REQUESTS
+    value: "20000"
+  - name: KONG_PG_DATABASE
+    value: kong
+  - name: KONG_NGINX_PROXY_PROXY_BUFFERS
+    value: 64 160k
+  - name: KONG_NGINX_PROXY_CLIENT_HEADER_BUFFER_SIZE
+    value: 16k
+  - name: KONG_NGINX_HTTP_CLIENT_HEADER_BUFFER_SIZE
+    value: 16k
+  - name: KONG_ADMIN_LISTEN
+    value: 0.0.0.0:8001
+  - name: KONG_NGINX_PROXY_PROXY_BUFFER_SIZE
+    value: 160k
+  - name: KONG_NGINX_PROXY_LARGE_CLIENT_HEADER_BUFFERS
+    value: 4 16k
+  - name: KONG_PLUGINS
+    value: bundled
+  - name: KONG_MEM_CACHE_SIZE
+    value: 2048m
+  - name: KONG_NGINX_HTTP_LARGE_CLIENT_HEADER_BUFFERS
+    value: 4 16k
+  - name: KONG_LOG_LEVEL
+    value: info
+  - name: KONG_ADMIN_GUI_API_URL
+    value: folio-etesting-snapshot-kong-admin-api.ci.folio.org
+  - name: KONG_NGINX_HTTPS_LARGE_CLIENT_HEADER_BUFFERS
+    value: 4 16k
+  - name: KONG_PROXY_LISTEN
+    value: 0.0.0.0:8000
+  - name: KONG_NGINX_WORKER_PROCESSES
+    value: auto
+  - name: EUREKA_RESOLVE_SIDECAR_IP
+    value: "false"
+  livenessProbe:
+    enabled: false
+  readinessProbe:
+    enabled: false
+  resources:
+    limits:
+      ephemeral-storage: 1Gi
+      memory: 3072Mi
+    requests:
+      ephemeral-storage: 50Mi
+      memory: 2428Mi
+  startupProbe:
+    enabled: false
+migration:
+  args:
+  - echo 'Hello kong!'
+  command:
+  - /bin/sh
+  - -c
+networkPolicy:
+  enabled: false
+postgresql:
+  enabled: false
+  external:
+    database: kong
+    existingSecret: kong-credentials
+    existingSecretPasswordKey: KONG_PG_PASSWORD
+    host: postgresql-snapshot
+    password: ""
+    port: 5432
+    user: kong
+replicaCount: 1
+service:
+  disableHttpPort: false
+  exposeAdmin: true
+  nodePorts:
+    adminHttp: ""
+    adminHttps: ""
+    proxyHttp: ""
+    proxyHttps: ""
+  ports:
+    adminHttp: 8001
+    adminHttps: 8444
+    proxyHttp: 8000
+    proxyHttps: 443
+  type: NodePort
+useDaemonset: false

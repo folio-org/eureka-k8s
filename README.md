@@ -30,6 +30,7 @@ Step-by-step guide for deploying Eureka base components (Keycloak, Kong, etc.)
    - Pay special attention to the ingress configuration.
    - If you're deploying on the cloud, add the required annotations.
    - If not, keep ingress in a disabled state.
+   - If you're doubt, how any entry should look like, please refer to sample_values.yaml files of kong & keycloak
 
 4. Update all required variables in the `setup.sh` file:
    - Provide Kong and Keycloak secrets.
