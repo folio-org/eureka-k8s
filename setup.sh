@@ -65,12 +65,12 @@ kubectl create secret generic keycloak-credentials \
 # Install Kong
 helm repo add kong https://charts.konghq.com
 helm repo update
-helm install kong-$1 kong/kong -f $current_dir/kong-values.yaml --version 12.0.11 --namespace $1
+helm install kong-$1 kong/kong -f $current_dir/kong/values.yaml --version 12.0.11 --namespace $1
 
 # Install Keycloak
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
-helm install keycloak-$1 bitnami/keycloak -f $current_dir/values.yaml --version 21.0.4 --namespace $1
+helm install keycloak-$1 bitnami/keycloak -f $current_dir/keycloak/values.yaml --version 21.0.4 --namespace $1
 
 # Wait for Keycloak to be ready
 while [ $(kubectl get pods -l release=keycloak-$1 -o jsonpath='{.items[*].status.phase}' --namespace $1) != "Running" ]; do
