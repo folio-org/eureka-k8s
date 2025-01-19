@@ -19,7 +19,7 @@ KONG_PG_PORT='5432'
 KONG_PG_USER='specify_postgresql_user'
 KONG_URL='http://kong:8001'
 
-#List of values for Keycloak secret creation, please adjust accordingly to your needs
+# List of values for Keycloak secret creation, please adjust accordingly to your needs
 KC_DB_PASSWORD='specify_keycloak_db_password'
 KC_DB_URL_DATABASE='keycloak'
 KC_DB_URL_HOST='specify_postgresql_host'
