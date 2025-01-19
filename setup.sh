@@ -73,13 +73,13 @@ helm install kong-$1 bitnami/kong -f $current_dir/kong/values.yaml --version 12.
 helm install keycloak-$1 bitnami/keycloak -f $current_dir/keycloak/values.yaml --version 21.0.4 --namespace $1
 
 # Wait for Keycloak to be ready
-while [ $(kubectl get pods -l release=keycloak-$1 -o jsonpath='{.items[*].status.phase}' --namespace $1) != "Running" ]; 
+while [ $(kubectl get pods -l release=keycloak-$1 -o jsonpath='{.items[*].status.phase}' --namespace $1) -ne "Running" ]; 
 do
   sleep 5
 done
 
 # Wait for Kong to be ready
-while [ $(kubectl get pods -l release=kong-$1 -o jsonpath='{.items[*].status.phase}' --namespace $1) != "Running" ]; 
+while [ $(kubectl get pods -l release=kong-$1 -o jsonpath='{.items[*].status.phase}' --namespace $1) -ne "Running" ]; 
 do
   sleep 5
 done
