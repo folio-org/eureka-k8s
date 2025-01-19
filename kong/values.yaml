@@ -33,7 +33,7 @@ ingress:
       paths:
       - backend:
           service:
-            name: kong-snapshot
+            name: kong
             port:
               name: http-proxy
         path: /*

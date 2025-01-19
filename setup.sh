@@ -69,13 +69,13 @@ helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
 
 # Install Kong
-helm install kong-$1 bitnami/kong -f $current_dir/kong/values.yaml --version $KONG_CHART_VERSION --namespace $1
+helm install kong bitnami/kong -f $current_dir/kong/values.yaml --version $KONG_CHART_VERSION --namespace $1
 
 # Install Keycloak
-helm install keycloak-$1 bitnami/keycloak -f $current_dir/keycloak/values.yaml --version $KEYCLOAK_CHART_VERSION --namespace $1
+helm install keycloak bitnami/keycloak -f $current_dir/keycloak/values.yaml --version $KEYCLOAK_CHART_VERSION --namespace $1
 
 # Wait for Keycloak to be ready
-while [ "$(kubectl get pods -l release=keycloak-$1 -o jsonpath='{.items[*].status.phase}' --namespace $1)" != "Running" ]; 
+while [ "$(kubectl get pods -l release=keycloak -o jsonpath='{.items[*].status.phase}' --namespace $1)" != "Running" ]; 
 do
   sleep 5
 done
@@ -83,7 +83,7 @@ done
 echo "Keycloak pod is ready in namespace $1"
 
 # Wait for Kong to be ready
-while [ "$(kubectl get pods -l release=kong-$1 -o jsonpath='{.items[*].status.phase}' --namespace $1)" != "Running" ]; 
+while [ "$(kubectl get pods -l release=kong -o jsonpath='{.items[*].status.phase}' --namespace $1)" != "Running" ]; 
 do
   sleep 5
 done
