@@ -10,6 +10,7 @@ Step-by-step guide for deploying Eureka base components (Keycloak, Kong, etc.)
 1. PostgreSQL is available on the cluster/namespace or accessible within the network.
 2. Kong and Keycloak databases are created.
 3. Users in Kong and Keycloak databases are provisioned.
+4. k3s || k8s cluster, locally configured kubectl with a proper context already switched to the target cluster.
 
 ---
 
