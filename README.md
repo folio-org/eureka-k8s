@@ -1,13 +1,46 @@
-# eureka-k8s
-step-by-step guide for deploying Eureka base (keycloak, kong etc.) components<br />
-***Prerequisites:<br />
-1. Postgresql is availabe on cluster\namespace or network
-2. Kong\Keycloak DBs created
-3. Users in Kong\Keycloak DBs provisioned<br />
-***Steps to follow:<br />
-1. git clone https://github.com/folio-org/eureka-k8s.git
-2. cd eureka-k8s/ && chmod +x setup.sh
-3. Adjust kong\keycloak value.yaml files according to your needs (Please pay attention to ingress part, if you're on cloud please use annotations, if not, keep it in disabled state)
-4. Update all required variables in setup.sh file (Kong\Keycloak secrets, mostly DB related, please use the same creds fron prerequisites #3)
-5. Execute script via ./setup YourNamespaceName<br />
-![image](https://github.com/user-attachments/assets/5d8ead13-7949-42de-90f1-6fdf60640f2f)
+
+# Eureka-K8s
+
+Step-by-step guide for deploying Eureka base components (Keycloak, Kong, etc.)
+
+---
+
+## Prerequisites
+
+1. PostgreSQL is available on the cluster/namespace or accessible within the network.
+2. Kong and Keycloak databases are created.
+3. Users in Kong and Keycloak databases are provisioned.
+
+---
+
+## Steps to Follow
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/folio-org/eureka-k8s.git
+   ```
+
+2. Navigate to the directory and make the setup script executable:
+   ```bash
+   cd eureka-k8s/ && chmod +x setup.sh
+   ```
+
+3. Adjust the `values.yaml` files for Kong and Keycloak according to your needs:
+   - Pay special attention to the ingress configuration.
+   - If you're deploying on the cloud, add the required annotations.
+   - If not, keep ingress in a disabled state.
+
+4. Update all required variables in the `setup.sh` file:
+   - Provide Kong and Keycloak secrets.
+   - Ensure database credentials match those provisioned in **Prerequisites** #3.
+
+5. Execute the script:
+   ```bash
+   ./setup YourNamespaceName
+   ```
+
+---
+
+## Example Image
+
+![Example Deployment](https://github.com/user-attachments/assets/5d8ead13-7949-42de-90f1-6fdf60640f2f)
