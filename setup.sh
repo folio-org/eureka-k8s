@@ -31,7 +31,7 @@ KEYCLOAK_ADMIN_PASSWORD='specify_keycloak_admin_password'
 KEYCLOAK_ADMIN_USER='keycloak_admin'
 
 
-# Create namespace
+# Create namespace, if doesn't exist
 STATUS=$(kubectl create namespace $1)
 if [ $? -eq 0 ]; then
   echo "Namespace $1 created successfully"
