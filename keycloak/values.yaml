@@ -1,0 +1,121 @@
+auth:
+  adminUser: admin
+  existingSecret: keycloak-credentials
+  passwordSecretKey: KEYCLOAK_ADMIN_PASSWORD
+containerSecurityContext:
+  enabled: false
+enableDefaultInitContainers: false
+externalDatabase:
+  existingSecret: keycloak-credentials
+  existingSecretDatabaseKey: KC_DB_URL_DATABASE
+  existingSecretHostKey: KC_DB_URL_HOST
+  existingSecretPasswordKey: KC_DB_PASSWORD
+  existingSecretPortKey: KC_DB_URL_PORT
+  existingSecretUserKey: KC_DB_USERNAME
+extraEnvVars:
+- name: KC_HOSTNAME_BACKCHANNEL_DYNAMIC
+  value: "true"
+- name: KC_HOSTNAME
+  value: https://keycloak-pulic-dns-record # must be adjusted to the actual hostname
+- name: KC_HOSTNAME_BACKCHANNEL
+  value: https://keycloak-pulic-dns-record-bc # must be adjusted to the actual hostname
+- name: KC_HOSTNAME_STRICT
+  value: "false"
+- name: KC_HOSTNAME_STRICT_HTTPS
+  value: "false"
+- name: KC_PROXY
+  value: edge
+- name: FIPS
+  value: "false"
+- name: EUREKA_RESOLVE_SIDECAR_IP
+  value: "false"
+- name: PROXY_ADDRESS_FORWARDING
+  value: "true"
+- name: KC_FOLIO_BE_ADMIN_CLIENT_SECRET
+  valueFrom:
+    secretKeyRef:
+      key: KC_FOLIO_BE_ADMIN_CLIENT_SECRET
+      name: keycloak-credentials
+- name: KC_HTTPS_KEY_STORE_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      key: KC_HTTPS_KEY_STORE_PASSWORD
+      name: keycloak-credentials
+- name: KC_LOG_LEVEL
+  value: DEBUG
+- name: KC_HOSTNAME_DEBUG
+  value: "true"
+- name: KC_DB_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      key: KC_DB_PASSWORD
+      name: keycloak-credentials
+- name: KC_DB_URL_DATABASE
+  valueFrom:
+    secretKeyRef:
+      key: KC_DB_URL_DATABASE
+      name: keycloak-credentials
+- name: KC_DB_URL_HOST
+  valueFrom:
+    secretKeyRef:
+      key: KC_DB_URL_HOST
+      name: keycloak-credentials
+- name: KC_DB_URL_PORT
+  valueFrom:
+    secretKeyRef:
+      key: KC_DB_URL_PORT
+      name: keycloak-credentials
+- name: KC_DB_USERNAME
+  valueFrom:
+    secretKeyRef:
+      key: KC_DB_USERNAME
+      name: keycloak-credentials
+- name: KC_HTTP_ENABLED
+  value: "true"
+- name: KC_HTTP_PORT
+  value: "8080"
+- name: KC_HEALTH_ENABLED
+  value: "true"
+image:
+  debug: false
+  pullPolicy: Always
+  registry: folioci
+  repository: folio-keycloak
+  tag: latest
+ingress: # this is the ingress for the keycloak service, if enabled it should be adjusted accordingly to your env setup
+#  annotations:
+#    alb.ingress.kubernetes.io/group.name: folio-etesting.snapshot
+#    alb.ingress.kubernetes.io/healthcheck-path: /
+#    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
+#    alb.ingress.kubernetes.io/scheme: internet-facing
+#    alb.ingress.kubernetes.io/success-codes: 200-399
+#    kubernetes.io/ingress.class: alb
+  enabled: false
+  hostname: keycloak-public-record # must be adjusted to the actual hostname
+  ingressClassName: ""
+  path: /*
+  pathType: ImplementationSpecific
+livenessProbe:
+  enabled: false
+logging:
+  level: DEBUG
+  output: default
+networkPolicy:
+  enabled: false
+postgresql:
+  enabled: false
+readinessProbe:
+  enabled: false
+resources:
+  limits:
+    memory: 3072Mi
+  requests:
+    memory: 2048Mi
+service:
+  http:
+    enabled: true
+  ports:
+    http: 8080
+  type: NodePort
+startupProbe:
+  enabled: false
