@@ -4,8 +4,10 @@
 # This script will install Kong and Keycloak in the specified namespace
 # Author: Kitfox team, part of the FOLIO project's contributor community
 
-# Global variables for the script
+# Global  static variables for the script
 current_dir=$(pwd)
+KONG_CHART_VERSION=12.0.11
+KEYCLOAK_CHART_VERSION=21.0.4
 
 # List of values for Kong secret creation, please adjust accordingly to your needs
 KONG_ADMIN_USER=$(echo 'kong_admin' | base64)
@@ -67,10 +69,10 @@ helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
 
 # Install Kong
-helm install kong-$1 bitnami/kong -f $current_dir/kong/values.yaml --version 12.0.11 --namespace $1
+helm install kong-$1 bitnami/kong -f $current_dir/kong/values.yaml --version $KONG_CHART_VERSION --namespace $1
 
 # Install Keycloak
-helm install keycloak-$1 bitnami/keycloak -f $current_dir/keycloak/values.yaml --version 21.0.4 --namespace $1
+helm install keycloak-$1 bitnami/keycloak -f $current_dir/keycloak/values.yaml --version $KEYCLOAK_CHART_VERSION --namespace $1
 
 # Wait for Keycloak to be ready
 while [ "$(kubectl get pods -l release=keycloak-$1 -o jsonpath='{.items[*].status.phase}' --namespace $1)" != "Running" ]; 
