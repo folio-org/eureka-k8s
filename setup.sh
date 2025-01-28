@@ -39,7 +39,19 @@ else
   echo "Namespace $1 already exists"
 fi
 
-# Create secret for Kong
+# Check if secrets(kong-credentials, keycloak-credentials) already exist in the namespace, if so delete them
+CHECK_KONG=$(kubectl get secret kong-credentials -n $1 --no-headers --output=custom-columns=NAME:.metadata.name)
+if [ $? -eq 0 ]; then
+  echo "Secret kong-credentials already exists in namespace $1"
+  kubectl delete secret kong-credentials --namespace $1
+fi
+CHECK_KEYCLOAK=$(kubectl get secret keycloak-credentials -n $1 --no-headers --output=custom-columns=NAME:.metadata.name)
+if [ $? -eq 0 ]; then
+  echo "Secret keycloak-credentials already exists in namespace $1"
+  kubectl delete secret keycloak-credentials --namespace $1
+fi
+
+#Create secret for Kong
 kubectl create secret generic kong-credentials \
   --from-literal=KONG_ADMIN_USER=$KONG_ADMIN_USER \
   --from-literal=KONG_PASSWORD=$KONG_PASSWORD \
@@ -66,16 +78,16 @@ kubectl create secret generic keycloak-credentials \
 
 # Add bitnami repo
 helm repo add bitnami https://charts.bitnami.com/bitnami
-helm repo update
+helm repo update > /dev/null
 
 # Install Kong
-helm install kong bitnami/kong -f $current_dir/kong/values.yaml --version $KONG_CHART_VERSION --namespace $1
+helm upgrade --install kong bitnami/kong -f $current_dir/kong/values.yaml --version $KONG_CHART_VERSION --namespace $1
 
 # Install Keycloak
-helm install keycloak bitnami/keycloak -f $current_dir/keycloak/values.yaml --version $KEYCLOAK_CHART_VERSION --namespace $1
+helm upgrade --install keycloak bitnami/keycloak -f $current_dir/keycloak/values.yaml --version $KEYCLOAK_CHART_VERSION --namespace $1
 
 # Wait for Keycloak to be ready
-while [ "$(kubectl get pods -l release=keycloak -o jsonpath='{.items[*].status.phase}' --namespace $1)" != "Running" ]; 
+while [ "$(kubectl get pods -l app.kubernetes.io/name=keycloak -o jsonpath='{.items[*].status.phase}' --namespace $1)" != "Running" ]; 
 do
   sleep 5
 done
@@ -83,7 +95,7 @@ done
 echo "Keycloak pod is ready in namespace $1"
 
 # Wait for Kong to be ready
-while [ "$(kubectl get pods -l release=kong -o jsonpath='{.items[*].status.phase}' --namespace $1)" != "Running" ]; 
+while [ "$(kubectl get pods -l app.kubernetes.io/name=kong -o jsonpath='{.items[*].status.phase}' --namespace $1)" != "Running" ]; 
 do
   sleep 5
 done
