@@ -3,6 +3,7 @@
 # Sample usage: ./setup.sh my-namespace
 # This script will install Kong and Keycloak in the specified namespace
 # Author: Kitfox team, part of the FOLIO project's contributor community
+# Idempotent: Yes, implementation date: 2025-01-28 by Kitfox team
 
 # Global  static variables for the script
 current_dir=$(pwd)
