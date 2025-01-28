@@ -102,7 +102,10 @@ kong:
   - name: KONG_LOG_LEVEL
     value: info
   - name: KONG_ADMIN_GUI_API_URL
-    value: folio-etesting-snapshot-kong-admin-api.ci.folio.org
+    valueFrom:
+      secretKeyRef:
+        key: KONG_URL
+        name: kong-credentials
   - name: KONG_NGINX_HTTPS_LARGE_CLIENT_HEADER_BUFFERS
     value: 4 16k
   - name: KONG_PROXY_LISTEN

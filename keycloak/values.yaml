@@ -16,9 +16,15 @@ extraEnvVars:
 - name: KC_HOSTNAME_BACKCHANNEL_DYNAMIC
   value: "true"
 - name: KC_HOSTNAME
-  value: https://keycloak-pulic-dns-record # must be adjusted to the actual hostname
+  valueFrom:
+    secretKeyRef:
+      key: KEYCLOAK_HOSTNAME
+      name: keycloak-credentials # must be adjusted to the actual hostname
 - name: KC_HOSTNAME_BACKCHANNEL
-  value: https://keycloak-pulic-dns-record-bc # must be adjusted to the actual hostname
+  valueFrom:
+    secretKeyRef:
+      key: KEYCLOAK_HOSTNAME
+      name: keycloak-credentials # must be adjusted to the actual hostname
 - name: KC_HOSTNAME_STRICT
   value: "false"
 - name: KC_HOSTNAME_STRICT_HTTPS

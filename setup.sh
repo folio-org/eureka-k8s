@@ -18,7 +18,7 @@ KONG_PG_HOST='specify_postgresql_host'
 KONG_PG_PASSWORD='specify_postgresql_password'
 KONG_PG_PORT='5432'
 KONG_PG_USER='specify_postgresql_user'
-KONG_URL='http://kong:8001'
+KONG_URL="http://kong.$(echo $1).svc.cluster.local:8001"
 
 # List of values for Keycloak secret creation, please adjust accordingly to your needs
 KC_DB_PASSWORD='specify_keycloak_db_password'
@@ -30,6 +30,7 @@ KC_FOLIO_BE_ADMIN_CLIENT_SECRET='folio_be_admin_client_secret'
 KC_HTTPS_KEY_STORE_PASSWORD='https_key_store_password'
 KEYCLOAK_ADMIN_PASSWORD='specify_keycloak_admin_password'
 KEYCLOAK_ADMIN_USER='keycloak_admin'
+KEYCLOAK_HOSTNAME="http://keycloak.$(echo $1).svc.cluster.local:8080"
 
 
 # Create namespace, if doesn't exist
@@ -75,6 +76,7 @@ kubectl create secret generic keycloak-credentials \
   --from-literal=KC_HTTPS_KEY_STORE_PASSWORD=$KC_HTTPS_KEY_STORE_PASSWORD \
   --from-literal=KEYCLOAK_ADMIN_PASSWORD=$KEYCLOAK_ADMIN_PASSWORD \
   --from-literal=KEYCLOAK_ADMIN_USER=$KEYCLOAK_ADMIN_USER \
+  --from-literal=KEYCLOAK_HOSTNAME=$KEYCLOAK_HOSTNAME \
   --namespace $1
 
 # Add bitnami repo
