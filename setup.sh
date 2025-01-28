@@ -41,12 +41,12 @@ else
 fi
 
 # Check if secrets(kong-credentials, keycloak-credentials) already exist in the namespace, if so delete them
-CHECK_KONG=$(kubectl get secret kong-credentials -n $1 --no-headers --output=custom-columns=NAME:.metadata.name)
+CHECK_KONG=$(kubectl get secret kong-credentials --namespace $1 --no-headers --output=custom-columns=NAME:.metadata.name)
 if [ $? -eq 0 ]; then
   echo "Secret kong-credentials already exists in namespace $1"
   kubectl delete secret kong-credentials --namespace $1
 fi
-CHECK_KEYCLOAK=$(kubectl get secret keycloak-credentials -n $1 --no-headers --output=custom-columns=NAME:.metadata.name)
+CHECK_KEYCLOAK=$(kubectl get secret keycloak-credentials --namespace $1 --no-headers --output=custom-columns=NAME:.metadata.name)
 if [ $? -eq 0 ]; then
   echo "Secret keycloak-credentials already exists in namespace $1"
   kubectl delete secret keycloak-credentials --namespace $1
